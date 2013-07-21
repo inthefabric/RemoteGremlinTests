@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>RexProClient</id>
+    <version>1.0.4921.22014</version>
+    <title>.NET RexPro Client</title>
+    <authors>Daniel Kuppitz</authors>
+    <owners>Daniel Kuppitz</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://github.com/dkuppitz/rexpro-client</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>RexPro Client for .NET</description>
+    <releaseNotes />
+    <copyright>Copyright 2013</copyright>
+    <language />
+    <tags>rexster rexpro tinkerpop</tags>
+    <dependencies>
+      <dependency id="MsgPack.Cli" version="0.3.1" />
+    </dependencies>
+  </metadata>
+</package>
