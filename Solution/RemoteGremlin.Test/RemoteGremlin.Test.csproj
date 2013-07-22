@@ -34,8 +34,13 @@
     <Compile Include="..\..\Global\GlobalAssemblyVersion.cs">
       <Link>Properties\GlobalAssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Fixtures\Timing.cs" />
+    <Compile Include="Fixtures\Query.cs" />
+    <Compile Include="Fixtures\TimingQueryBase.cs" />
+    <Compile Include="ResultSet.cs" />
+    <Compile Include="Fixtures\TimingBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestRexConnCtx.cs" />
+    <Compile Include="TimingUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MsgPack">
