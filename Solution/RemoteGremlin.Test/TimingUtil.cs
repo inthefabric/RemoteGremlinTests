@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -16,7 +18,7 @@ namespace RexConnectClient.Test {
 	/*================================================================================================*/
 	public static class TimingUtil {
 
-		private const string Host = "rexster";
+		public const string Host = "rexster";
 		
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
@@ -205,6 +207,78 @@ namespace RexConnectClient.Test {
 				pResults.AttachTime("Read", sw2);
 				pResults.AttachTime("ToJson", sw3);
 			}
+		}
+
+
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		/*--------------------------------------------------------------------------------------------*/
+		public static void PrintResultSets(string pTitle, int pRunCount, IList<ResultSet> pResultSets) {
+			Console.WriteLine();
+			Console.WriteLine("# "+pTitle+" Timing Results");
+			Console.WriteLine();
+			Console.WriteLine("### Summary");
+			Console.WriteLine();
+			Console.WriteLine("- **Script:** `"+pResultSets[0].Script+"`");
+			Console.WriteLine("- **Executed On:** "+DateTime.Now);
+			Console.WriteLine("- **Run Count:** "+pRunCount);
+			Console.WriteLine("- **Notes:** *None*");
+			Console.WriteLine();
+			Console.WriteLine("|Method|Avg Total|Chart|");
+			Console.WriteLine("|:--|--:|:--|");
+
+			foreach ( ResultSet rs in pResultSets ) {
+				double ms = rs.GetAverageTimeSum();
+
+				Console.WriteLine(
+					"|**"+rs.Name+"**|"+
+					TimingUtil.MillisToString(ms, 8)+"|`"+
+					new string('=', (int)Math.Min(50, ms))+(ms > 50 ? "..." : "")+"`|"
+				);
+			}
+
+			Console.WriteLine();
+			Console.WriteLine("### Details");
+			Console.WriteLine();
+
+			foreach ( ResultSet rs in pResultSets ) {
+				Console.WriteLine("#### "+rs.Name);
+				Console.WriteLine();
+				Console.WriteLine("|Section|Min|Avg|Max|");
+				Console.WriteLine("|:--|--:|--:|--:|");
+
+				foreach ( string key in rs.Executions[0].Keys ) {
+					IList<double> times = rs.GetTimes(key);
+
+					Console.WriteLine(
+						"|"+key+"|"+
+						TimingUtil.MillisToString(times.Min())+"|"+
+						TimingUtil.MillisToString(times.Average())+"|"+
+						TimingUtil.MillisToString(times.Max())+"|"
+					);
+				}
+
+				IList<double> sums = rs.GetTimeSums();
+
+				Console.WriteLine(
+					"|**Total**|"+
+					"**"+TimingUtil.MillisToString(sums.Min())+"**|"+
+					"**"+TimingUtil.MillisToString(sums.Average())+"**|"+
+					"**"+TimingUtil.MillisToString(sums.Max())+"**|"
+				);
+
+				Console.WriteLine();
+			}
+
+			/*foreach ( ResultSet rs in pResultSets ) {
+				Console.WriteLine("#### "+rs.Name);
+				Console.WriteLine();
+
+				foreach ( string json in rs.JsonResults ) {
+					Console.WriteLine(json.Replace("\n", "").Replace("\r", ""));
+				}
+
+				Console.WriteLine();
+			}*/
 		}
 
 	}
