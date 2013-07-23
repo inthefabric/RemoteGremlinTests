@@ -75,6 +75,17 @@ namespace RexConnectClient.Test.Fixtures {
 
 				Console.WriteLine();
 			}
+
+			/*foreach ( ResultSet rs in vResultSets ) {
+				Console.WriteLine("#### "+rs.Name);
+				Console.WriteLine();
+
+				foreach ( string json in rs.JsonResults ) {
+					Console.WriteLine(json.Replace("\n", "").Replace("\r", ""));
+				}
+
+				Console.WriteLine();
+			}*/
 		}
 
 
@@ -141,7 +152,7 @@ namespace RexConnectClient.Test.Fixtures {
 
 		/*--------------------------------------------------------------------------------------------*/
 		public void RexConnTcpSerial() {
-			var rs = GetResultSet();
+			var rs = GetResultSetWithRexConnRequest();
 			rs.SetName("RexConnTcpSerial");
 			TimingUtil.ExecuteSerial(TimingUtil.RunRexConnTcp, rs, GetRunCount());
 			StoreResult(rs);
@@ -149,7 +160,7 @@ namespace RexConnectClient.Test.Fixtures {
 
 		/*--------------------------------------------------------------------------------------------*/
 		public void RexConnHttpSerial() {
-			var rs = GetResultSet();
+			var rs = GetResultSetWithRexConnRequest();
 			rs.SetName("RexConnHttpSerial");
 			TimingUtil.ExecuteSerial(TimingUtil.RunRexConnHttp, rs, GetRunCount());
 			StoreResult(rs);
@@ -183,7 +194,7 @@ namespace RexConnectClient.Test.Fixtures {
 
 		/*--------------------------------------------------------------------------------------------*/
 		public void RexConnTcpParallel() {
-			var rs = GetResultSet();
+			var rs = GetResultSetWithRexConnRequest();
 			rs.SetName("RexConnTcpParallel");
 			TimingUtil.ExecuteParallel(TimingUtil.RunRexConnTcp, rs, GetRunCount());
 			StoreResult(rs);
@@ -191,7 +202,7 @@ namespace RexConnectClient.Test.Fixtures {
 
 		/*--------------------------------------------------------------------------------------------*/
 		public void RexConnHttpParallel() {
-			var rs = GetResultSet();
+			var rs = GetResultSetWithRexConnRequest();
 			rs.SetName("RexConnHttpParallel");
 			TimingUtil.ExecuteParallel(TimingUtil.RunRexConnHttp, rs, GetRunCount());
 			StoreResult(rs);

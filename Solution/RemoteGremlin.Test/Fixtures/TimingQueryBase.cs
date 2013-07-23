@@ -26,7 +26,7 @@ namespace RexConnectClient.Test.Fixtures {
 
 		/*--------------------------------------------------------------------------------------------*/
 		protected override int GetRunCount() {
-			return 50;
+			return 200;
 		}
 
 	}
