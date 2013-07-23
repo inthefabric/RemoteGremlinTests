@@ -32,13 +32,13 @@ namespace RexConnectClient.Test.Fixtures {
 
 	/*================================================================================================*/
 	[TestFixture]
-	public class GetBothBoth : TimingQueryBase {
+	public class GetBothCount : TimingQueryBase {
 
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
 		protected override string GetQuery() {
-			return "g.V.both.both.count()";
+			return "g.V.both.count()";
 		}
 
 	}

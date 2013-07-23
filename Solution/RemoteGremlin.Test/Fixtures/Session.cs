@@ -22,7 +22,7 @@ namespace RexConnectClient.Test.Fixtures {
 		[SetUp]
 		public void SetUp() {
 			vResultSets = new List<ResultSet>();
-			vRunCount = 40;
+			vRunCount = 500;
 		}
 
 		/*--------------------------------------------------------------------------------------------*/
@@ -125,6 +125,7 @@ namespace RexConnectClient.Test.Fixtures {
 		public static void RunRexConnClient(ResultSet pResults) {
 			var sw0 = Stopwatch.StartNew();
 			var r = new Request("123");
+
 			r.AddSessionAction(RexConn.SessionAction.Start);
 			
 			RequestCmd cmd = r.AddQuery("x='hello';");
