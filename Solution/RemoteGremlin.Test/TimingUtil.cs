@@ -8,7 +8,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using RexConnectClient.Core;
-using RexConnectClient.Core.Result;
 using Rexster;
 using Rexster.Messages;
 using ServiceStack.Text;
@@ -32,11 +31,19 @@ namespace RexConnectClient.Test {
 
 		/*--------------------------------------------------------------------------------------------*/
 		public static void ExecuteSerial(Action<ResultSet> pRun, ResultSet pResults, int pCount) {
+			Console.WriteLine(pResults.Name);
+			Console.WriteLine("- Warm up...");
 			WarmDb(pRun, pResults);
 
+			Console.Write("- Run: ");
+
 			for ( int i = 0 ; i < pCount ; ++i ) {
+				Console.Write(i+", ");
 				pRun(pResults);
 			}
+
+			Console.WriteLine();
+			Console.WriteLine("- Done!");
 		}
 
 		/*--------------------------------------------------------------------------------------------*/
@@ -122,18 +129,13 @@ namespace RexConnectClient.Test {
 			sw0.Stop();
 
 			var sw1 = Stopwatch.StartNew();
-			IResponseResult res = da.Execute();
+			string json = da.ExecuteRaw();
 			sw1.Stop();
-
-			var sw2 = Stopwatch.StartNew();
-			string json = res.ResponseJson;
-			sw2.Stop();
 
 			lock ( pResults ) {
 				pResults.AddExecution(json);
 				pResults.AttachTime("Init", sw0);
 				pResults.AttachTime("Exec", sw1);
-				pResults.AttachTime("ToJson", sw2);
 			}
 		}
 
@@ -219,9 +221,10 @@ namespace RexConnectClient.Test {
 			Console.WriteLine("### Summary");
 			Console.WriteLine();
 			Console.WriteLine("- **Script:** `"+pResultSets[0].Script+"`");
-			Console.WriteLine("- **Executed On:** "+DateTime.Now);
+			Console.WriteLine("- **Environment:** [v1.1]"+
+				"(https://github.com/inthefabric/RemoteGremlinTests/wiki/Testing-Environment)");
 			Console.WriteLine("- **Run Count:** "+pRunCount);
-			Console.WriteLine("- **Notes:** *None*");
+			Console.WriteLine("- **Date:** "+DateTime.Now);
 			Console.WriteLine();
 			Console.WriteLine("|Method|Avg Total|Chart|");
 			Console.WriteLine("|:--|--:|:--|");
@@ -231,7 +234,7 @@ namespace RexConnectClient.Test {
 
 				Console.WriteLine(
 					"|**"+rs.Name+"**|"+
-					TimingUtil.MillisToString(ms, 8)+"|`"+
+					MillisToString(ms, 8)+"|`"+
 					new string('=', (int)Math.Min(50, ms))+(ms > 50 ? "..." : "")+"`|"
 				);
 			}
@@ -251,9 +254,9 @@ namespace RexConnectClient.Test {
 
 					Console.WriteLine(
 						"|"+key+"|"+
-						TimingUtil.MillisToString(times.Min())+"|"+
-						TimingUtil.MillisToString(times.Average())+"|"+
-						TimingUtil.MillisToString(times.Max())+"|"
+						MillisToString(times.Min())+"|"+
+						MillisToString(times.Average())+"|"+
+						MillisToString(times.Max())+"|"
 					);
 				}
 
@@ -261,9 +264,9 @@ namespace RexConnectClient.Test {
 
 				Console.WriteLine(
 					"|**Total**|"+
-					"**"+TimingUtil.MillisToString(sums.Min())+"**|"+
-					"**"+TimingUtil.MillisToString(sums.Average())+"**|"+
-					"**"+TimingUtil.MillisToString(sums.Max())+"**|"
+					"**"+MillisToString(sums.Min())+"**|"+
+					"**"+MillisToString(sums.Average())+"**|"+
+					"**"+MillisToString(sums.Max())+"**|"
 				);
 
 				Console.WriteLine();

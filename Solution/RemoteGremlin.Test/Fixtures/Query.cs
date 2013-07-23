@@ -41,6 +41,11 @@ namespace RexConnectClient.Test.Fixtures {
 			return "g.V.both.count()";
 		}
 
+		/*--------------------------------------------------------------------------------------------*/
+		protected override int GetRunCount() {
+			return 200;
+		}
+
 	}
 
 
