@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace RexConnectClient.Test.Fixtures {
@@ -7,7 +8,6 @@ namespace RexConnectClient.Test.Fixtures {
 	/*================================================================================================*/
 	public abstract class TimingBase {
 
-		private string vTitle;
 		private IList<ResultSet> vResultSets;
 
 
@@ -19,49 +19,59 @@ namespace RexConnectClient.Test.Fixtures {
 		}
 
 		/*--------------------------------------------------------------------------------------------*/
-		[TearDown]
-		public void TearDown() {
-			Console.WriteLine("# "+vTitle+" Timing Results");
+		public void PrintResultSets(string pTitle) {
 			Console.WriteLine();
-			Console.WriteLine("- **Executed:** "+DateTime.Now);
-			Console.WriteLine("- **Run Count:** "+GetRunCount());
+			Console.WriteLine("# "+pTitle+" Timing Results");
 			Console.WriteLine();
 			Console.WriteLine("### Summary");
+			Console.WriteLine();
+			Console.WriteLine("- **Script:** `"+vResultSets[0].Script+"`");
+			Console.WriteLine("- **Executed On:** "+DateTime.Now);
+			Console.WriteLine("- **Run Count:** "+GetRunCount());
+			Console.WriteLine("- **Notes:** *None*");
+			Console.WriteLine();
+			Console.WriteLine("|Method|Avg Total|Chart|");
+			Console.WriteLine("|:--|--:|:--|");
 
 			foreach ( ResultSet rs in vResultSets ) {
 				double ms = rs.GetAverageTimeSum();
-				Console.WriteLine("- "+rs.Name.PadRight(20)+" | "+TimingUtil.MillisToString(ms, 8)+" | "+
-					new string('#', (int)ms*10));
+
+				Console.WriteLine(
+					"|**"+rs.Name+"**|"+
+					TimingUtil.MillisToString(ms, 8)+"|`"+
+					new string('=', (int)Math.Min(50,ms))+(ms > 50 ? "..." : "")+"`|"
+				);
 			}
 
 			Console.WriteLine();
+			Console.WriteLine("### Details");
+			Console.WriteLine();
 
 			foreach ( ResultSet rs in vResultSets ) {
-				Console.WriteLine("### "+rs.Name);
+				Console.WriteLine("#### "+rs.Name);
 				Console.WriteLine();
-				Console.WriteLine("- **Average:** "+TimingUtil.MillisToString(rs.GetAverageTimeSum()));
-				Console.WriteLine();
-
-				string header = "|";
-				string cols = "|";
+				Console.WriteLine("|Section|Min|Avg|Max|");
+				Console.WriteLine("|:--|--:|--:|--:|");
 
 				foreach ( string key in rs.Executions[0].Keys ) {
-					header += key+"|";
-					cols += "--:|";
+					IList<double> times = rs.GetTimes(key);
+					
+					Console.WriteLine(
+						"|"+key+"|"+
+						TimingUtil.MillisToString(times.Min())+"|"+
+						TimingUtil.MillisToString(times.Average())+"|"+
+						TimingUtil.MillisToString(times.Max())+"|"
+					);
 				}
 
-				Console.WriteLine(header);
-				Console.WriteLine(cols);
+				IList<double> sums = rs.GetTimeSums();
 
-				foreach ( var ex in rs.Executions ) {
-					string row = "|";
-
-					foreach ( string key in ex.Keys ) {
-						row += TimingUtil.MillisToString(ex[key])+"|";
-					}
-
-					Console.WriteLine(row);
-				}
+				Console.WriteLine(
+					"|**Total**|"+
+					"**"+TimingUtil.MillisToString(sums.Min())+"**|"+
+					"**"+TimingUtil.MillisToString(sums.Average())+"**|"+
+					"**"+TimingUtil.MillisToString(sums.Max())+"**|"
+				);
 
 				Console.WriteLine();
 			}
@@ -84,25 +94,23 @@ namespace RexConnectClient.Test.Fixtures {
 		/*--------------------------------------------------------------------------------------------*/
 		[Test]
 		public void CompareSerial() {
-			vTitle = "Serial";
-
 			GremlinExtSerial();
 			RexProSerial();
 			RexConnClientSerial();
 			RexConnTcpSerial();
 			RexConnHttpSerial();
+			PrintResultSets("Serial");
 		}
 
 		/*--------------------------------------------------------------------------------------------*/
 		[Test]
 		public void CompareParallel() {
-			vTitle = "Parallel";
-
 			GremlinExtParallel();
 			RexProParallel();
 			RexConnClientParallel();
 			RexConnTcpParallel();
 			RexConnHttpParallel();
+			PrintResultSets("Parallel");
 		}
 
 
