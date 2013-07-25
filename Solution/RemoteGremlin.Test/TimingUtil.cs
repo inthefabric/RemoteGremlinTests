@@ -273,6 +273,48 @@ namespace RexConnectClient.Test {
 				Console.WriteLine();
 			}
 
+			Console.WriteLine();
+			Console.WriteLine("### Histograms");
+			Console.WriteLine();
+
+			foreach ( ResultSet rs in pResultSets ) {
+				var sumHisto = new Dictionary<int, int>();
+				int maxW = 0;
+				int maxH = 0;
+
+				foreach ( double sum in rs.GetTimeSums() ) {
+					int s = (int)sum;
+
+					if ( !sumHisto.ContainsKey(s) ) {
+						sumHisto.Add(s, 0);
+					}
+
+					sumHisto[s]++;
+					maxW = Math.Max(maxW, s);
+					maxH = Math.Max(maxH, sumHisto[s]);
+				}
+
+				Console.WriteLine("#### "+rs.Name);
+				Console.WriteLine();
+				Console.WriteLine("```");
+
+				for ( int y = maxH ; y >= 0 ; --y ) {
+					for ( int x = 0 ; x < maxW ; ++x ) {
+						if ( !sumHisto.ContainsKey(x) ) {
+							continue;
+						}
+
+						Console.Write(sumHisto[x] >= y ? "#" : " ");
+					}
+
+					Console.WriteLine();
+				}
+
+				Console.WriteLine(new string('-', maxW));
+				Console.WriteLine("```");
+				Console.WriteLine();
+			}
+
 			/*foreach ( ResultSet rs in pResultSets ) {
 				Console.WriteLine("#### "+rs.Name);
 				Console.WriteLine();
