@@ -41,8 +41,8 @@ namespace RexConnectClient.Test.Fixtures {
 			GremlinExtSerial();
 			RexProSerial();
 			RexConnClientSerial();
-			RexConnTcpSerial();
-			RexConnHttpSerial();
+			//RexConnTcpSerial();
+			//RexConnHttpSerial();
 			PrintResultSets("Serial");
 		}
 
@@ -52,8 +52,8 @@ namespace RexConnectClient.Test.Fixtures {
 			GremlinExtParallel();
 			RexProParallel();
 			RexConnClientParallel();
-			RexConnTcpParallel();
-			RexConnHttpParallel();
+			//RexConnTcpParallel();
+			//RexConnHttpParallel();
 			PrintResultSets("Parallel");
 		}
 

@@ -124,7 +124,8 @@ namespace RexConnectClient.Test {
 		/*--------------------------------------------------------------------------------------------*/
 		public static void RunRexConnClient(ResultSet pResults) {
 			var sw0 = Stopwatch.StartNew();
-			var ctx = new TestRexConnCtx(pResults.RexConnRequest, Host, 8185);
+			//var ctx = new TestRexConnCtx(pResults.RexConnRequest, Host, 8185);
+			var ctx = new TestRexConnCtx(pResults.RexConnRequest, Host, 8182) { UseHttp = true };
 			var da = new RexConnDataAccess(ctx);
 			sw0.Stop();
 
