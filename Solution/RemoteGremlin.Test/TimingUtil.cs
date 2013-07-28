@@ -227,9 +227,8 @@ namespace RexConnectClient.Test {
 			Console.WriteLine("- **Run Count:** "+pRunCount);
 			Console.WriteLine("- **Date:** "+DateTime.Now);
 			Console.WriteLine();
-			Console.WriteLine("```c");
-			Console.WriteLine("Method".PadRight(22)+"Avg Total".PadLeft(10)+"    Times");
-			Console.WriteLine("----------------------------------------------------------------");
+			Console.WriteLine("|Method|Avg Total|Times|");
+			Console.WriteLine("|:--|--:|:--|");
 
 			foreach ( ResultSet rs in pResultSets ) {
 				double ms = rs.GetAverageTimeSum();
@@ -237,50 +236,19 @@ namespace RexConnectClient.Test {
 				string histo = "";
 
 				for ( int x = 0 ; x <= hist.MaxTime ; ++x ) {
-					if ( !hist.ContainsKey(x) ) {
-						histo += " ";
-						continue;
-					}
-
-					int z = hist[x];
-
-					if ( z <= 0 ) {
-						histo += ' ';
-					}
-					else if ( z == 1 ) {
-						histo += '.';
-					}
-					else if ( z == 2 ) {
-						histo += ':';
-					}
-					else if ( z == 3 ) {
-						histo += '⋮';
-					}
-					else if ( z == 4 ) {
-						histo += '⁞';
-					}
-					else if ( z < 20 ) {
-						histo += '░';
-					}
-					else if ( z < 40 ) {
-						histo += '▒';
-					}
-					else if ( z < 80 ) {
-						histo += '▓';
-					}
-					else {
-						histo += '▓'; //'█';
-					}
+					int z = (hist.ContainsKey(x) ? hist[x] : 0);
+					double perc = 1-(z/(double)pRunCount);
+					byte r = (byte)(220*perc);
+					byte g = (byte)(245*perc);
+					byte b = (byte)(255*perc);
+					string rgb = r.ToString("X2")+g.ToString("X2")+b.ToString("X2");
+					string text = "Occurrences at "+x+"ms: "+z;
+					histo += "![ ](http://dummyimage.com/3x20/"+rgb+"/"+rgb+".png \""+text+"\")";
 				}
 
-				Console.WriteLine(
-					"\""+rs.Name+"\""+new string(' ', 22-rs.Name.Length)+
-					MillisToString(ms, 8)+"  //["+histo+"]"
-					//"`"+new string('=', (int)Math.Min(50, ms))+(ms > 50 ? "..." : "")+"`|"
-				);
+				Console.WriteLine("|"+rs.Name+"|"+MillisToString(ms)+"|"+histo+"|");
 			}
 
-			Console.WriteLine("```");
 			Console.WriteLine();
 			Console.WriteLine("### Details");
 			Console.WriteLine();
