@@ -227,19 +227,60 @@ namespace RexConnectClient.Test {
 			Console.WriteLine("- **Run Count:** "+pRunCount);
 			Console.WriteLine("- **Date:** "+DateTime.Now);
 			Console.WriteLine();
-			Console.WriteLine("|Method|Avg Total|Chart|");
-			Console.WriteLine("|:--|--:|:--|");
+			Console.WriteLine("```c");
+			Console.WriteLine("Method".PadRight(22)+"Avg Total".PadLeft(10)+"    Times");
+			Console.WriteLine("----------------------------------------------------------------");
 
 			foreach ( ResultSet rs in pResultSets ) {
 				double ms = rs.GetAverageTimeSum();
+				var hist = rs.GetHistogram();
+				string histo = "";
+
+				for ( int x = 0 ; x <= hist.MaxTime ; ++x ) {
+					if ( !hist.ContainsKey(x) ) {
+						histo += " ";
+						continue;
+					}
+
+					int z = hist[x];
+
+					if ( z <= 0 ) {
+						histo += ' ';
+					}
+					else if ( z == 1 ) {
+						histo += '.';
+					}
+					else if ( z == 2 ) {
+						histo += ':';
+					}
+					else if ( z == 3 ) {
+						histo += '⋮';
+					}
+					else if ( z == 4 ) {
+						histo += '⁞';
+					}
+					else if ( z < 20 ) {
+						histo += '░';
+					}
+					else if ( z < 40 ) {
+						histo += '▒';
+					}
+					else if ( z < 80 ) {
+						histo += '▓';
+					}
+					else {
+						histo += '▓'; //'█';
+					}
+				}
 
 				Console.WriteLine(
-					"|**"+rs.Name+"**|"+
-					MillisToString(ms, 8)+"|`"+
-					new string('=', (int)Math.Min(50, ms))+(ms > 50 ? "..." : "")+"`|"
+					"\""+rs.Name+"\""+new string(' ', 22-rs.Name.Length)+
+					MillisToString(ms, 8)+"  //["+histo+"]"
+					//"`"+new string('=', (int)Math.Min(50, ms))+(ms > 50 ? "..." : "")+"`|"
 				);
 			}
 
+			Console.WriteLine("```");
 			Console.WriteLine();
 			Console.WriteLine("### Details");
 			Console.WriteLine();
@@ -270,48 +311,6 @@ namespace RexConnectClient.Test {
 					"**"+MillisToString(sums.Max())+"**|"
 				);
 
-				Console.WriteLine();
-			}
-
-			Console.WriteLine();
-			Console.WriteLine("### Histograms");
-			Console.WriteLine();
-
-			foreach ( ResultSet rs in pResultSets ) {
-				var sumHisto = new Dictionary<int, int>();
-				int maxW = 0;
-				int maxH = 0;
-
-				foreach ( double sum in rs.GetTimeSums() ) {
-					int s = (int)sum;
-
-					if ( !sumHisto.ContainsKey(s) ) {
-						sumHisto.Add(s, 0);
-					}
-
-					sumHisto[s]++;
-					maxW = Math.Max(maxW, s);
-					maxH = Math.Max(maxH, sumHisto[s]);
-				}
-
-				Console.WriteLine("#### "+rs.Name);
-				Console.WriteLine();
-				Console.WriteLine("```");
-
-				for ( int y = maxH ; y >= 0 ; --y ) {
-					for ( int x = 0 ; x < maxW ; ++x ) {
-						if ( !sumHisto.ContainsKey(x) ) {
-							continue;
-						}
-
-						Console.Write(sumHisto[x] >= y ? "#" : " ");
-					}
-
-					Console.WriteLine();
-				}
-
-				Console.WriteLine(new string('-', maxW));
-				Console.WriteLine("```");
 				Console.WriteLine();
 			}
 

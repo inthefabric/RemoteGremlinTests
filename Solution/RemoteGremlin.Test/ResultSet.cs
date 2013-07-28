@@ -104,6 +104,15 @@ namespace RexConnectClient.Test {
 			return GetTimeSums().Average();
 		}
 
+
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		/*--------------------------------------------------------------------------------------------*/
+		public ResultSetHistogram GetHistogram() {
+			var hist = new ResultSetHistogram();
+			hist.Build(this);
+			return hist;
+		}
+
 	}
 
 }

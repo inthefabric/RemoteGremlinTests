@@ -34,6 +34,7 @@
     <Compile Include="..\..\Global\GlobalAssemblyVersion.cs">
       <Link>Properties\GlobalAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="ResultSetHistogram.cs" />
     <Compile Include="Fixtures\Session.cs" />
     <Compile Include="Fixtures\Query.cs" />
     <Compile Include="Fixtures\TimingQueryBase.cs" />
