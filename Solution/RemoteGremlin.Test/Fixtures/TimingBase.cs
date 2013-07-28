@@ -40,9 +40,10 @@ namespace RexConnectClient.Test.Fixtures {
 		public void CompareSerial() {
 			GremlinExtSerial();
 			RexProSerial();
-			RexConnClientSerial();
-			//RexConnTcpSerial();
-			//RexConnHttpSerial();
+			RexConnClientTcpSerial();
+			RexConnTcpSerial();
+			RexConnClientHttpSerial();
+			RexConnHttpSerial();
 			PrintResultSets("Serial");
 		}
 
@@ -51,9 +52,10 @@ namespace RexConnectClient.Test.Fixtures {
 		public void CompareParallel() {
 			GremlinExtParallel();
 			RexProParallel();
-			RexConnClientParallel();
-			//RexConnTcpParallel();
-			//RexConnHttpParallel();
+			RexConnClientTcpParallel();
+			RexConnTcpParallel();
+			RexConnClientHttpParallel();
+			RexConnHttpParallel();
 			PrintResultSets("Parallel");
 		}
 
@@ -76,10 +78,18 @@ namespace RexConnectClient.Test.Fixtures {
 		}
 
 		/*--------------------------------------------------------------------------------------------*/
-		public void RexConnClientSerial() {
+		public void RexConnClientHttpSerial() {
 			var rs = GetResultSetWithRexConnRequest();
-			rs.SetName("RexConnClientSerial");
-			TimingUtil.ExecuteSerial(TimingUtil.RunRexConnClient, rs, GetRunCount());
+			rs.SetName("RexConnClientHttpSerial");
+			TimingUtil.ExecuteSerial(TimingUtil.RunRexConnClientHttp, rs, GetRunCount());
+			StoreResult(rs);
+		}
+
+		/*--------------------------------------------------------------------------------------------*/
+		public void RexConnClientTcpSerial() {
+			var rs = GetResultSetWithRexConnRequest();
+			rs.SetName("RexConnClientTcpSerial");
+			TimingUtil.ExecuteSerial(TimingUtil.RunRexConnClientTcp, rs, GetRunCount());
 			StoreResult(rs);
 		}
 
@@ -118,10 +128,18 @@ namespace RexConnectClient.Test.Fixtures {
 		}
 
 		/*--------------------------------------------------------------------------------------------*/
-		public void RexConnClientParallel() {
+		public void RexConnClientHttpParallel() {
 			var rs = GetResultSetWithRexConnRequest();
-			rs.SetName("RexConnClientParallel");
-			TimingUtil.ExecuteParallel(TimingUtil.RunRexConnClient, rs, GetRunCount());
+			rs.SetName("RexConnClientHttpParallel");
+			TimingUtil.ExecuteParallel(TimingUtil.RunRexConnClientHttp, rs, GetRunCount());
+			StoreResult(rs);
+		}
+
+		/*--------------------------------------------------------------------------------------------*/
+		public void RexConnClientTcpParallel() {
+			var rs = GetResultSetWithRexConnRequest();
+			rs.SetName("RexConnClientTcpParallel");
+			TimingUtil.ExecuteParallel(TimingUtil.RunRexConnClientTcp, rs, GetRunCount());
 			StoreResult(rs);
 		}
 

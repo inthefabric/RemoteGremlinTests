@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using RexConnectClient.Core;
 using Rexster;
@@ -33,9 +34,12 @@ namespace RexConnectClient.Test {
 		public static void ExecuteSerial(Action<ResultSet> pRun, ResultSet pResults, int pCount) {
 			Console.WriteLine(pResults.Name);
 			Console.WriteLine("- Warm up...");
+			Thread.Sleep(30);
+			
 			WarmDb(pRun, pResults);
 
 			Console.Write("- Run: ");
+			Thread.Sleep(30);
 
 			for ( int i = 0 ; i < pCount ; ++i ) {
 				Console.Write(i+", ");
@@ -44,6 +48,7 @@ namespace RexConnectClient.Test {
 
 			Console.WriteLine();
 			Console.WriteLine("- Done!");
+			Thread.Sleep(30);
 		}
 
 		/*--------------------------------------------------------------------------------------------*/
@@ -120,12 +125,22 @@ namespace RexConnectClient.Test {
 				pResults.AttachTime("ToJson", sw3);
 			}
 		}
+		
+		/*--------------------------------------------------------------------------------------------*/
+		public static void RunRexConnClientHttp(ResultSet pResults) {
+			RunRexConnClientInner(pResults, true);
+		}
 
 		/*--------------------------------------------------------------------------------------------*/
-		public static void RunRexConnClient(ResultSet pResults) {
+		public static void RunRexConnClientTcp(ResultSet pResults) {
+			RunRexConnClientInner(pResults, false);
+		}
+
+		/*--------------------------------------------------------------------------------------------*/
+		private static void RunRexConnClientInner(ResultSet pResults, bool pUseHttp) {
 			var sw0 = Stopwatch.StartNew();
-			//var ctx = new TestRexConnCtx(pResults.RexConnRequest, Host, 8185);
-			var ctx = new TestRexConnCtx(pResults.RexConnRequest, Host, 8182) { UseHttp = true };
+			var ctx = new TestRexConnCtx(pResults.RexConnRequest, Host, (pUseHttp ? 8182 : 8185));
+			ctx.UseHttp = pUseHttp;
 			var da = new RexConnDataAccess(ctx);
 			sw0.Stop();
 
@@ -140,23 +155,52 @@ namespace RexConnectClient.Test {
 			}
 		}
 
+		/*--------------------------------------------------------------------------------------------* /
+		//Adapted from RexConnectClient's RexConnDataAccess
+		public static void RunRexConnTcpNetty(ResultSet pResults) {
+			var sw0 = Stopwatch.StartNew();
+			byte[] data = Encoding.ASCII.GetBytes(pResults.Script+"\0");
+			sw0.Stop();
+
+			var sw1 = Stopwatch.StartNew();
+			var tcp = new TcpClient(Host, 8185);
+			NetworkStream stream = tcp.GetStream();
+			sw1.Stop();
+
+			var sw2 = Stopwatch.StartNew();
+			stream.Write(data, 0, data.Length);
+			sw2.Stop();
+
+			var sw3 = Stopwatch.StartNew();
+			string json = new StreamReader(stream).ReadToEnd();
+			sw3.Stop();
+
+			lock ( pResults ) {
+				pResults.AddExecution(json);
+				pResults.AttachTime("TcpBytes", sw0);
+				pResults.AttachTime("TcpWrite", sw1);
+				pResults.AttachTime("DataLen", sw2);
+				pResults.AttachTime("ToJson", sw3);
+			}
+		}
+
 		/*--------------------------------------------------------------------------------------------*/
 		//Adapted from RexConnectClient's RexConnDataAccess
 		public static void RunRexConnTcp(ResultSet pResults) {
 			var sw0 = Stopwatch.StartNew();
 			int len = IPAddress.HostToNetworkOrder(pResults.Script.Length);
 			byte[] dataLen = BitConverter.GetBytes(len);
-			byte[] data = Encoding.ASCII.GetBytes(pResults.Script);
+			byte[] data = Encoding.ASCII.GetBytes(pResults.Script+"\0");
 			sw0.Stop();
 
 			var sw1 = Stopwatch.StartNew();
 			var tcp = new TcpClient(Host, 8185);
 			NetworkStream stream = tcp.GetStream();
 			stream.Write(dataLen, 0, dataLen.Length);
-			stream.Write(data, 0, data.Length);
 			sw1.Stop();
 
 			var sw2 = Stopwatch.StartNew();
+			stream.Write(data, 0, data.Length);
 			data = new byte[4];
 			stream.Read(data, 0, data.Length);
 			Array.Reverse(data);

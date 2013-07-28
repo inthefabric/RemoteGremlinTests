@@ -48,8 +48,13 @@ namespace RexConnectClient.Test.Fixtures {
 			vResultSets.Add(rs);
 
 			rs = new ResultSet("");
-			rs.SetName("RexConnClient");
-			TimingUtil.ExecuteSerial(RunRexConnClient, rs, vRunCount);
+			rs.SetName("RexConnClientTcp");
+			TimingUtil.ExecuteSerial(RunRexConnClientTcp, rs, vRunCount);
+			vResultSets.Add(rs);
+
+			rs = new ResultSet("");
+			rs.SetName("RexConnClientHttp");
+			TimingUtil.ExecuteSerial(RunRexConnClientHttp, rs, vRunCount);
 			vResultSets.Add(rs);
 
 			PrintResultSets("Serial");
@@ -122,7 +127,17 @@ namespace RexConnectClient.Test.Fixtures {
 		}
 
 		/*--------------------------------------------------------------------------------------------*/
-		public static void RunRexConnClient(ResultSet pResults) {
+		public static void RunRexConnClientHttp(ResultSet pResults) {
+			RunRexConnClientInner(pResults, true);
+		}
+
+		/*--------------------------------------------------------------------------------------------*/
+		public static void RunRexConnClientTcp(ResultSet pResults) {
+			RunRexConnClientInner(pResults, false);
+		}
+
+		/*--------------------------------------------------------------------------------------------*/
+		private static void RunRexConnClientInner(ResultSet pResults, bool pUseHttp) {
 			var sw0 = Stopwatch.StartNew();
 			var r = new Request("123");
 
@@ -149,7 +164,9 @@ namespace RexConnectClient.Test.Fixtures {
 
 			r.AddSessionAction(RexConn.SessionAction.Close);
 
-			var ctx = new TestRexConnCtx(r, TimingUtil.Host, 8185);
+			var ctx = new TestRexConnCtx(r, TimingUtil.Host, (pUseHttp ? 8182 : 8185));
+			ctx.UseHttp = pUseHttp;
+
 			var da = new RexConnDataAccess(ctx);
 			sw0.Stop();
 
