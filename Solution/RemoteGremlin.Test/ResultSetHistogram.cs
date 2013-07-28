@@ -8,6 +8,7 @@ namespace RexConnectClient.Test {
 
 		public int MinTime { get; set; }
 		public int MaxTime { get; set; }
+		public int MaxOccurence { get; set; }
 		
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
@@ -15,6 +16,7 @@ namespace RexConnectClient.Test {
 		public ResultSetHistogram() {
 			MinTime = int.MaxValue;
 			MaxTime = 0;
+			MaxOccurence = 0;
 		}
 
 		/*--------------------------------------------------------------------------------------------*/
@@ -29,6 +31,7 @@ namespace RexConnectClient.Test {
 				this[s]++;
 				MinTime = Math.Min(MinTime, s);
 				MaxTime = Math.Max(MaxTime, s);
+				MaxOccurence = Math.Max(MaxOccurence, this[s]);
 			}
 		}
 

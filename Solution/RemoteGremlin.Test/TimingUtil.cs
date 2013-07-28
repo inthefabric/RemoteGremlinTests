@@ -230,6 +230,13 @@ namespace RexConnectClient.Test {
 			Console.WriteLine("|Method|Avg Total|Times|");
 			Console.WriteLine("|:--|--:|:--|");
 
+			int maxZ = 0;
+
+			foreach ( ResultSet rs in pResultSets ) {
+				var hist = rs.GetHistogram();
+				maxZ = Math.Max(maxZ, hist.MaxOccurence);
+			}
+
 			foreach ( ResultSet rs in pResultSets ) {
 				double ms = rs.GetAverageTimeSum();
 				var hist = rs.GetHistogram();
@@ -237,7 +244,7 @@ namespace RexConnectClient.Test {
 
 				for ( int x = 0 ; x <= hist.MaxTime ; ++x ) {
 					int z = (hist.ContainsKey(x) ? hist[x] : 0);
-					double perc = 1-(z/(double)pRunCount);
+					double perc = 1-(z/(double)maxZ);
 					byte r = (byte)(220*perc);
 					byte g = (byte)(245*perc);
 					byte b = (byte)(255*perc);
