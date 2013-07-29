@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using RexConnectClient.Core.Transfer;
-using ServiceStack.Text;
 
-namespace RexConnectClient.Test {
+namespace RexConnectClient.Test.Results {
 
 	/*================================================================================================*/
 	public class ResultSet {
-
-		public string Name { get; set; }
-		public string Script { get; private set; }
-		public Request RexConnRequest { get; private set; }
 
 		public IList<string> JsonResults { get; private set; }
 		public IList<IDictionary<string, double>> Executions { get; private set; }
@@ -21,37 +14,9 @@ namespace RexConnectClient.Test {
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
-		public ResultSet(string pScript) {
-			Script = pScript;
+		public ResultSet() {
 			JsonResults = new List<string>();
 			Executions = new List<IDictionary<string, double>>();
-		}
-		
-		/*--------------------------------------------------------------------------------------------*/
-		public ResultSet(Request pRexConnRequest) : this("") {
-			RexConnRequest = pRexConnRequest;
-
-			JsConfig.EmitCamelCaseNames = true;
-			Script = JsonSerializer.SerializeToString(RexConnRequest);
-			JsConfig.EmitCamelCaseNames = false;
-		}
-
-		/*--------------------------------------------------------------------------------------------*/
-		public ResultSet Clone() {
-			if ( RexConnRequest != null ) {
-				return new ResultSet(RexConnRequest);
-			}
-
-			return new ResultSet(Script);
-		}
-
-		/*--------------------------------------------------------------------------------------------*/
-		public void SetName(string pName) {
-			if ( Name != null ) {
-				throw new Exception("ResultSet already has a name: "+Name);
-			}
-
-			Name = pName;
 		}
 
 

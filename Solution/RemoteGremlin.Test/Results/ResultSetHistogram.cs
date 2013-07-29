@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RexConnectClient.Test {
+namespace RexConnectClient.Test.Results {
 
 	/*================================================================================================*/
 	public class ResultSetHistogram : Dictionary<int, int> {
