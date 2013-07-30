@@ -14,7 +14,7 @@ namespace RexConnectClient.Test.Runners {
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
-		public override void Run(bool pRecordResult=true) {
+		protected override void RunInner(bool pRecordResult=true) {
 			Stopwatch sw1;
 			var sw0 = Stopwatch.StartNew();
 			byte[] bytes;

@@ -12,7 +12,7 @@ namespace RexConnectClient.Test.Runners {
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
-		public override void Run(bool pRecordResult=true) {
+		protected override void RunInner(bool pRecordResult=true) {
 			var sw0 = Stopwatch.StartNew();
 			var req = HttpWebRequest.Create(vUrl);
 			sw0.Stop();

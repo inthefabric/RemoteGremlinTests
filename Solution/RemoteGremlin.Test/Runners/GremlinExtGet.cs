@@ -8,10 +8,10 @@ namespace RexConnectClient.Test.Runners {
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
-		public override void Run(bool pRecordResult=true) {
+		protected override void RunInner(bool pRecordResult=true) {
 			vUrl = "http://"+TimingUtil.Host+":8182/graphs/graph/tp/gremlin?script="+
 				HttpUtility.UrlEncode(Script);
-			base.Run(pRecordResult);
+			base.RunInner(pRecordResult);
 		}
 
 	}

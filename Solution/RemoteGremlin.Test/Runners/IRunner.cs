@@ -1,4 +1,5 @@
-﻿using RexConnectClient.Core.Transfer;
+﻿using System;
+using RexConnectClient.Core.Transfer;
 using RexConnectClient.Test.Results;
 
 namespace RexConnectClient.Test.Runners {
@@ -10,6 +11,7 @@ namespace RexConnectClient.Test.Runners {
 		string Script { get; }
 		Request RexConnRequest { get; }
 		ResultSet Results { get; }
+		Action<IRunner, bool> CustomRunner { get; set; }
 
 
 		////////////////////////////////////////////////////////////////////////////////////////////////

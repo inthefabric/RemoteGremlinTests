@@ -10,7 +10,7 @@ namespace RexConnectClient.Test.Runners {
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
-		public override void Run(bool pRecordResult=true) {
+		protected override void RunInner(bool pRecordResult=true) {
 			var sw0 = Stopwatch.StartNew();
 			var rp = new Rexster.RexProClient(TimingUtil.Host, 8184);
 			sw0.Stop();

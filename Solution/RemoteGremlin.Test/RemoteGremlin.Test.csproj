@@ -36,7 +36,8 @@
     </Compile>
     <Compile Include="Benchmark.cs" />
     <Compile Include="BenchmarkSet.cs" />
-    <Compile Include="Fixtures\QuerySerial.cs" />
+    <Compile Include="Fixtures\Session.cs" />
+    <Compile Include="Fixtures\SimpleQuery.cs" />
     <Compile Include="Results\ResultSetHistogram.cs" />
     <Compile Include="Results\ResultSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

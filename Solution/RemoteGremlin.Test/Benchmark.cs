@@ -46,6 +46,11 @@ namespace RexConnectClient.Test {
 		}
 
 		/*--------------------------------------------------------------------------------------------*/
+		public void OverrideRunners(IRunner[] pRunners) {
+			Runners = pRunners;
+		}
+
+		/*--------------------------------------------------------------------------------------------*/
 		public void Prepare(string pTestName, string pScript) {
 			var r = new Request("1");
 			r.AddQuery(pScript);

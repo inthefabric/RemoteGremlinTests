@@ -1,4 +1,5 @@
-﻿using RexConnectClient.Core.Transfer;
+﻿using System;
+using RexConnectClient.Core.Transfer;
 using RexConnectClient.Test.Results;
 using ServiceStack.Text;
 
@@ -11,6 +12,7 @@ namespace RexConnectClient.Test.Runners {
 		public string Script { get; private set; }
 		public Request RexConnRequest { get; private set; }
 		public ResultSet Results { get; private set; }
+		public Action<IRunner, bool> CustomRunner { get; set; }
 
 		protected bool vUseRexConnReq;
 
@@ -38,12 +40,22 @@ namespace RexConnectClient.Test.Runners {
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
-		public abstract void Run(bool pRecordResult=true);
+		public void Run(bool pRecordResult=true) {
+			if ( CustomRunner != null ) {
+				CustomRunner(this, pRecordResult);
+				return;
+			}
+
+			RunInner(pRecordResult);
+		}
+
+		/*--------------------------------------------------------------------------------------------*/
+		protected abstract void RunInner(bool pRecordResult=true);
 
 		/*--------------------------------------------------------------------------------------------*/
 		public void RunMany(int pCount, bool pRecordResult=true) {
 			for ( int i = 0 ; i < pCount ; ++i ) {
-				Run(pRecordResult);
+				RunInner(pRecordResult);
 			}
 		}
 

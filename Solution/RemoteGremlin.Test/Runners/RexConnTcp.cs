@@ -18,7 +18,7 @@ namespace RexConnectClient.Test.Runners {
 
 		/*--------------------------------------------------------------------------------------------*/
 		//Adapted from RexConnectClient's RexConnDataAccess
-		public override void Run(bool pRecordResult=true) {
+		protected override void RunInner(bool pRecordResult=true) {
 			var sw0 = Stopwatch.StartNew();
 			int len = IPAddress.HostToNetworkOrder(Script.Length);
 			byte[] dataLen = BitConverter.GetBytes(len);
