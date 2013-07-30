@@ -13,8 +13,8 @@ namespace RexConnectClient.Test.Fixtures {
 		[TestCase(true)]
 		public void RunBenchmarks(bool pParallel) {
 			const int warm = 5;
-			const int rounds = 2;
-			const int roundSize = 40;
+			const int rounds = 10;
+			const int roundSize = 100;
 
 			var set = new BenchmarkSet("Simple Query ("+(pParallel ? "Parallel" : "Serial")+")");
 
