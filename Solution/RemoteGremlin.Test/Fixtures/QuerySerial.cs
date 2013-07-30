@@ -11,29 +11,30 @@ namespace RexConnectClient.Test.Fixtures {
 		/*--------------------------------------------------------------------------------------------*/
 		[Test]
 		public void RunBenchmarks() {
-			const int warm = 5;
-			const int rounds = 10;
-			const int roundSize = 100;
+			const int warm = 1;
+			const int rounds = 1;
+			const int roundSize = 1;
 
+			var set = new BenchmarkSet("Simple Query (Serial)");
+			
 			var b = new Benchmark();
 			b.Prepare("GetGraph", "g");
-			b.Run(warm, rounds, roundSize);
-			b.Print();
+			set.Add(b);
 
 			b = new Benchmark();
 			b.Prepare("GetNumber", "99");
-			b.Run(warm, rounds, roundSize);
-			b.Print();
-
+			set.Add(b);
+			
 			b = new Benchmark();
 			b.Prepare("GetVertices", "g.V[0..30]");
-			b.Run(warm, rounds, roundSize);
-			b.Print();
+			set.Add(b);
 
 			b = new Benchmark();
 			b.Prepare("GetBothCount", "g.V.both.count()");
-			b.Run(warm, rounds, roundSize);
-			b.Print();
+			set.Add(b);
+
+			set.RunAll(warm, rounds, roundSize);
+			set.Print();
 		}
 
 	}

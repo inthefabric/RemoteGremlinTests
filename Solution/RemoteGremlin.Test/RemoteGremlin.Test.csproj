@@ -35,6 +35,7 @@
       <Link>Properties\GlobalAssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Benchmark.cs" />
+    <Compile Include="BenchmarkSet.cs" />
     <Compile Include="Fixtures\QuerySerial.cs" />
     <Compile Include="Results\ResultSetHistogram.cs" />
     <Compile Include="Results\ResultSet.cs" />

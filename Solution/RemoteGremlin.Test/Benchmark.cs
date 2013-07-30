@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using RexConnectClient.Core.Transfer;
 using RexConnectClient.Test.Runners;
 
@@ -52,45 +53,41 @@ namespace RexConnectClient.Test {
 			}
 		}
 
-
-		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
 		public void Run(int pWarm, int pRounds, int pRoundSize) {
 			Warm = pWarm;
 			Rounds = pRounds;
 			RoundSize = pRoundSize;
 
-			foreach ( IRunner run in Runners ) {
-				//Console.WriteLine("++ Warming "+run.Method+"."+run.TestName+" ("+pWarm+" count) ++");
+			Console.WriteLine("// Starting "+TestName+": W="+Warm+", R="+Rounds+", RS="+RoundSize);
+			var sw = Stopwatch.StartNew();
 
+			foreach ( IRunner run in Runners ) {
 				for ( int i = 0 ; i < Warm ; ++i ) {
 					run.Run(false);
 				}
 			}
 
 			for ( int round = 0 ; round < Rounds ; ++round ) {
-				//Console.WriteLine();
+				Console.WriteLine("// Round "+(round+1)+"/"+pRounds+": \t"+sw.ElapsedMilliseconds+"ms");
 
 				foreach ( IRunner run in Runners ) {
-					//Console.WriteLine("++ Running "+run.Method+"."+run.TestName+
-					//	" (round "+(round+1)+"/"+pRounds+"; "+pRoundSize+" count) ++");
-
 					for ( int i = 0 ; i < RoundSize ; ++i ) {
 						run.Run();
 					}
 				}
 			}
+
+			Console.WriteLine();
 		}
 
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
 		public void Print() {
-			Console.WriteLine();
 			Console.WriteLine("### "+TestName);
 			Console.WriteLine("- **Script:** `"+Script+"`");
-			Console.WriteLine("- **Plan:** Warm="+Warm+", Rounds="+Rounds+", RoundSize="+RoundSize);
-			Console.WriteLine("- **Date:** "+DateTime.Now);
+			Console.WriteLine("- **Plan:** Warm "+Warm+", Rounds "+Rounds+", RoundSize "+RoundSize);
 			Console.WriteLine();
 			Console.WriteLine("|Method|Avg Total|Times|");
 			Console.WriteLine("|:--|--:|:--|");
@@ -120,6 +117,8 @@ namespace RexConnectClient.Test {
 
 				Console.WriteLine("|"+run.Method+"|"+TimingUtil.MillisToString(ms)+"|"+histo+"|");
 			}
+			
+			Console.WriteLine();
 
 			/*Console.WriteLine();
 			Console.WriteLine("### Details");
