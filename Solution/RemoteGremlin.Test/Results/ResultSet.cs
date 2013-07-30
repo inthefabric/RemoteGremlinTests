@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -23,6 +24,10 @@ namespace RexConnectClient.Test.Results {
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
 		public void AddExecution(string pResult) {
+			/*if ( JsonResults.Count == 0 ) {
+				Console.WriteLine("First result: "+pResult.Replace("\n", "").Replace("\r", ""));
+			}*/
+
 			JsonResults.Add(pResult);
 
 			CurrEx = new Dictionary<string, double>();

@@ -24,7 +24,7 @@ namespace RexConnectClient.Test.Runners {
 			sw2.Stop();
 
 			var sw3 = Stopwatch.StartNew();
-			string json = resp.Dump();
+			string json = resp.SerializeToString();
 			sw3.Stop();
 
 			if ( !pRecordResult ) {
