@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using RexConnectClient.Core.Transfer;
 using RexConnectClient.Test.Runners;
 
@@ -9,6 +10,7 @@ namespace RexConnectClient.Test {
 	public class Benchmark {
 
 		public IRunner[] Runners { get; private set; }
+		public bool IsParallel { get; private set; }
 		public string TestName { get; private set; }
 		public string Script { get; private set; }
 		public Request RexConnRequest { get; private set; }
@@ -17,10 +19,13 @@ namespace RexConnectClient.Test {
 		public int Rounds { get; private set; }
 		public int RoundSize { get; private set; }
 
+		private readonly ParallelOptions vParOpt;
+
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
-		public Benchmark() {
+		public Benchmark(bool pIsParallel) {
+			IsParallel = pIsParallel;
 			TestName = "Unknown";
 
 			Runners = new IRunner[] {
@@ -33,6 +38,11 @@ namespace RexConnectClient.Test {
 				new RexConnGet(),
 				//new RexConnPost()
 			};
+
+			if ( IsParallel ) {
+				vParOpt = new ParallelOptions();
+				vParOpt.MaxDegreeOfParallelism = 8;
+			}
 		}
 
 		/*--------------------------------------------------------------------------------------------*/
@@ -72,6 +82,12 @@ namespace RexConnectClient.Test {
 				Console.WriteLine("// Round "+(round+1)+"/"+pRounds+":  "+sw.ElapsedMilliseconds+"ms");
 
 				foreach ( IRunner run in Runners ) {
+					if ( IsParallel ) {
+						IRunner r = run;
+						Parallel.For(0, RoundSize, vParOpt, (x => r.Run()));
+						continue;
+					}
+
 					for ( int i = 0 ; i < RoundSize ; ++i ) {
 						run.Run();
 					}
