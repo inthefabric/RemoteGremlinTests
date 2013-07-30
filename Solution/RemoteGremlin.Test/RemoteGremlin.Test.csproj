@@ -58,9 +58,9 @@
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <HintPath>..\..\Packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="RexConnectClient.Core, Version=0.3.6.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="RexConnectClient.Core, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Packages\RexConnectClient.0.3.6.0\lib\RexConnectClient.Core.dll</HintPath>
+      <HintPath>..\..\Packages\RexConnectClient.0.4.0.0\lib\RexConnectClient.Core.dll</HintPath>
     </Reference>
     <Reference Include="RexProClient">
       <HintPath>..\..\Packages\RexProClient.1.0.4921.22014\lib\net40\RexProClient.dll</HintPath>
