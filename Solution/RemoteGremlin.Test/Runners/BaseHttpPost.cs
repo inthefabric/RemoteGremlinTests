@@ -1,32 +1,37 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Net;
+using System.Text;
 
 namespace RexConnectClient.Test.Runners {
 
 	/*================================================================================================*/
-	public class GremlinExt : Runner {
+	public class BaseHttpPost : Runner {
+
+		protected string vUrl;
+		protected string vScriptVar;
 
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
 		public override void Run(bool pRecordResult=true) {
+			Stopwatch sw1;
 			var sw0 = Stopwatch.StartNew();
-			var req = HttpWebRequest.Create(
-				"http://"+TimingUtil.Host+":8182/graphs/graph/tp/gremlin?script="+Script);
-			sw0.Stop();
+			byte[] bytes;
 
-			var sw1 = Stopwatch.StartNew();
-			WebResponse resp = req.GetResponse();
-			sw1.Stop();
+			using ( var wc = new WebClient() ) {
+				var vals = new NameValueCollection();
+				vals[vScriptVar] = Script;
+				sw0.Stop();
+
+				sw1 = Stopwatch.StartNew();
+				bytes = wc.UploadValues(vUrl, "POST", vals);
+				sw1.Stop();
+			}
 
 			var sw2 = Stopwatch.StartNew();
-			var sr = new StreamReader(resp.GetResponseStream());
+			string json = Encoding.ASCII.GetString(bytes, 0, bytes.Length);
 			sw2.Stop();
-
-			var sw3 = Stopwatch.StartNew();
-			string json = sr.ReadToEnd();
-			sw3.Stop();
 
 			if ( !pRecordResult ) {
 				return;
@@ -36,8 +41,7 @@ namespace RexConnectClient.Test.Runners {
 				Results.AddExecution(json);
 				Results.AttachTime("Init", sw0);
 				Results.AttachTime("Exec", sw1);
-				Results.AttachTime("Read", sw2);
-				Results.AttachTime("ToJson", sw3);
+				Results.AttachTime("ToJson", sw2);
 			}
 		}
 

@@ -1,26 +1,20 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Web;
 
 namespace RexConnectClient.Test.Runners {
 
 	/*================================================================================================*/
-	public class RexConnHttp : Runner {
+	public class BaseHttpGet : Runner {
 		
+		protected string vUrl;
+
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
-		public RexConnHttp() {
-			vUseRexConnReq = true;
-		}
-
-		/*--------------------------------------------------------------------------------------------*/
 		public override void Run(bool pRecordResult=true) {
 			var sw0 = Stopwatch.StartNew();
-			string url = "http://"+TimingUtil.Host+":8182/graphs/graph/fabric/rexconnect?req="+
-				HttpUtility.UrlEncode(Script);
-			var req = HttpWebRequest.Create(url);
+			var req = HttpWebRequest.Create(vUrl);
 			sw0.Stop();
 
 			var sw1 = Stopwatch.StartNew();

@@ -8,7 +8,6 @@ namespace RexConnectClient.Test.Runners {
 	public abstract class Runner : IRunner {
 
 		public string Method { get; set; }
-		public string TestName { get; private set; }
 		public string Script { get; private set; }
 		public Request RexConnRequest { get; private set; }
 		public ResultSet Results { get; private set; }
@@ -24,8 +23,7 @@ namespace RexConnectClient.Test.Runners {
 		}
 
 		/*--------------------------------------------------------------------------------------------*/
-		public void Prepare(string pTestName, string pScript, Request pRexConnRequest) {
-			TestName = pTestName;
+		public void Prepare(string pScript, Request pRexConnRequest) {
 			Script = pScript;
 
 			if ( vUseRexConnReq ) {

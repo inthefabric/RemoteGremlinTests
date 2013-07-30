@@ -1,15 +1,14 @@
 ﻿namespace RexConnectClient.Test.Runners {
 
 	/*================================================================================================*/
-	public class RexConnPost : BaseHttpPost {
+	public class GremlinExtPost : BaseHttpPost {
 		
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
-		public RexConnPost() {
-			vUseRexConnReq = true;
-			vUrl = "http://"+TimingUtil.Host+":8182/graphs/graph/fabric/rexconnect";
-			vScriptVar = "req";
+		public GremlinExtPost() {
+			vUrl = "http://"+TimingUtil.Host+":8182/graphs/graph/tp/gremlin";
+			vScriptVar = "script";
 		}
 
 	}

@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using RexConnectClient.Test.Runners;
 
 namespace RexConnectClient.Test.Fixtures {
 
@@ -12,13 +11,29 @@ namespace RexConnectClient.Test.Fixtures {
 		/*--------------------------------------------------------------------------------------------*/
 		[Test]
 		public void RunBenchmarks() {
-			IRunner[] runs = TimingUtil.GetAllRunners("GetGraph", "g");
-			TimingUtil.RunRounds(runs, 5, 10, 50);
-			TimingUtil.PrintResultSets(runs);
+			const int warm = 5;
+			const int rounds = 10;
+			const int roundSize = 100;
 
-			runs = TimingUtil.GetAllRunners("GetVertices", "g.V[0..10]");
-			TimingUtil.RunRounds(runs, 5, 10, 50);
-			TimingUtil.PrintResultSets(runs);
+			var b = new Benchmark();
+			b.Prepare("GetGraph", "g");
+			b.Run(warm, rounds, roundSize);
+			b.Print();
+
+			b = new Benchmark();
+			b.Prepare("GetNumber", "99");
+			b.Run(warm, rounds, roundSize);
+			b.Print();
+
+			b = new Benchmark();
+			b.Prepare("GetVertices", "g.V[0..30]");
+			b.Run(warm, rounds, roundSize);
+			b.Print();
+
+			b = new Benchmark();
+			b.Prepare("GetBothCount", "g.V.both.count()");
+			b.Run(warm, rounds, roundSize);
+			b.Print();
 		}
 
 	}

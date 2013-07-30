@@ -58,12 +58,12 @@ namespace RexConnectClient.Test.Runners {
 
 
 	/*================================================================================================*/
-	public class RexConnClientHttp : RexConnClient {
+	public class RexConnClientPost : RexConnClient {
 
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
-		public RexConnClientHttp() {
+		public RexConnClientPost() {
 			vUseHttp = true;
 		}
 

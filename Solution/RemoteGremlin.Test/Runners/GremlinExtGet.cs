@@ -1,15 +1,17 @@
-﻿namespace RexConnectClient.Test.Runners {
+﻿using System.Web;
+
+namespace RexConnectClient.Test.Runners {
 
 	/*================================================================================================*/
-	public class RexConnPost : BaseHttpPost {
-		
+	public class GremlinExtGet : BaseHttpGet {
+
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
-		public RexConnPost() {
-			vUseRexConnReq = true;
-			vUrl = "http://"+TimingUtil.Host+":8182/graphs/graph/fabric/rexconnect";
-			vScriptVar = "req";
+		public override void Run(bool pRecordResult=true) {
+			vUrl = "http://"+TimingUtil.Host+":8182/graphs/graph/tp/gremlin?script="+
+				HttpUtility.UrlEncode(Script);
+			base.Run(pRecordResult);
 		}
 
 	}

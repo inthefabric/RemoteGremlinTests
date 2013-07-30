@@ -34,18 +34,22 @@
     <Compile Include="..\..\Global\GlobalAssemblyVersion.cs">
       <Link>Properties\GlobalAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Benchmark.cs" />
     <Compile Include="Fixtures\QuerySerial.cs" />
     <Compile Include="Results\ResultSetHistogram.cs" />
     <Compile Include="Results\ResultSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runners\BaseHttpGet.cs" />
+    <Compile Include="Runners\BaseHttpPost.cs" />
+    <Compile Include="Runners\GremlinExtPost.cs" />
     <Compile Include="Runners\RexConnPost.cs" />
-    <Compile Include="Runners\GremlinExt.cs" />
+    <Compile Include="Runners\GremlinExtGet.cs" />
     <Compile Include="Runners\RexProClient.cs" />
     <Compile Include="Runners\RexConnClient.cs" />
     <Compile Include="Runners\RexConnTcp.cs" />
     <Compile Include="Runners\IRunner.cs" />
     <Compile Include="Runners\Runner.cs" />
-    <Compile Include="Runners\RexConnHttp.cs" />
+    <Compile Include="Runners\RexConnGet.cs" />
     <Compile Include="TimingUtil.cs" />
   </ItemGroup>
   <ItemGroup>

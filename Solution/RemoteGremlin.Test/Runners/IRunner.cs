@@ -7,7 +7,6 @@ namespace RexConnectClient.Test.Runners {
 	public interface IRunner {
 
 		string Method { get; }
-		string TestName { get; }
 		string Script { get; }
 		Request RexConnRequest { get; }
 		ResultSet Results { get; }
@@ -15,7 +14,7 @@ namespace RexConnectClient.Test.Runners {
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
-		void Prepare(string pTestName, string pScript, Request pRexConnRequest);
+		void Prepare(string pScript, Request pRexConnRequest);
 
 		/*--------------------------------------------------------------------------------------------*/
 		void Run(bool pRecordResult=true);
