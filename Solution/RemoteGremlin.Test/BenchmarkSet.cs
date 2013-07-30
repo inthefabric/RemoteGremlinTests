@@ -37,7 +37,7 @@ namespace RexConnectClient.Test {
 			Console.WriteLine("The following **"+Name+"** timing tests...");
 			Console.WriteLine("- Executed in [Environment A v1.1]"+
 				"(https://github.com/inthefabric/RemoteGremlinTests/wiki/Testing-Environments)");
-			Console.WriteLine("- Finished at "+DateTime.Now);
+			Console.WriteLine("- Completed on "+DateTime.Now.ToString("R"));
 			Console.WriteLine();
 
 			foreach ( Benchmark b in Benchmarks ) {

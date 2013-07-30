@@ -69,7 +69,7 @@ namespace RexConnectClient.Test {
 			}
 
 			for ( int round = 0 ; round < Rounds ; ++round ) {
-				Console.WriteLine("// Round "+(round+1)+"/"+pRounds+": \t"+sw.ElapsedMilliseconds+"ms");
+				Console.WriteLine("// Round "+(round+1)+"/"+pRounds+":  "+sw.ElapsedMilliseconds+"ms");
 
 				foreach ( IRunner run in Runners ) {
 					for ( int i = 0 ; i < RoundSize ; ++i ) {
@@ -87,11 +87,12 @@ namespace RexConnectClient.Test {
 		public void Print() {
 			Console.WriteLine("### "+TestName);
 			Console.WriteLine("- **Script:** `"+Script+"`");
-			Console.WriteLine("- **Plan:** Warm "+Warm+", Rounds "+Rounds+", RoundSize "+RoundSize);
+			Console.WriteLine("- **Plan:** Warms "+Warm+", Rounds "+Rounds+", RoundSize "+RoundSize);
 			Console.WriteLine();
 			Console.WriteLine("|Method|Avg Total|Times|");
 			Console.WriteLine("|:--|--:|:--|");
 
+			const string url = "http://dummyimage.com";
 			int maxZ = 0;
 
 			foreach ( IRunner run in Runners ) {
@@ -104,15 +105,18 @@ namespace RexConnectClient.Test {
 				var hist = run.Results.GetHistogram();
 				string histo = "";
 
-				for ( int x = 0 ; x <= hist.MaxTime ; ++x ) {
+				for ( int x = 0 ; x <= hist.MaxTime+1 ; ++x ) {
 					int z = (hist.ContainsKey(x) ? hist[x] : 0);
-					double perc = 1-(z/(double)maxZ);
-					byte r = (byte)(220*perc);
-					byte g = (byte)(245*perc);
-					byte b = (byte)(255*perc);
-					string rgb = r.ToString("X2")+g.ToString("X2")+b.ToString("X2");
+					double perc = z/(double)maxZ;
+					int h = (z == 0 ? 1 : (int)(19*perc)+1);
+					string rgb = (z == 0 ? "dddddd" : "6dbe51"); //"4183c4");
+
+					if ( x == (int)Math.Round(ms, MidpointRounding.AwayFromZero) ) {
+						histo += "![ ]("+url+"/1x20/000000/000000.png \"Average\")";
+					}
+
 					string text = "Occurrences at "+x+"ms: "+z;
-					histo += "![ ](http://dummyimage.com/3x20/"+rgb+"/"+rgb+".png \""+text+"\")";
+					histo += "![ ]("+url+"/3x"+h+"/"+rgb+"/"+rgb+".png \""+text+"\")";
 				}
 
 				Console.WriteLine("|"+run.Method+"|"+TimingUtil.MillisToString(ms)+"|"+histo+"|");

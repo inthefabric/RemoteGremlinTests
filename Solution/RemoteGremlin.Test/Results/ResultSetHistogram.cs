@@ -22,7 +22,7 @@ namespace RexConnectClient.Test.Results {
 		/*--------------------------------------------------------------------------------------------*/
 		public void Build(ResultSet pResult) {
 			foreach ( double sum in pResult.GetTimeSums() ) {
-				int s = (int)sum;
+				int s = (int)Math.Round(sum, MidpointRounding.AwayFromZero);
 
 				if ( !ContainsKey(s) ) {
 					Add(s, 0);
