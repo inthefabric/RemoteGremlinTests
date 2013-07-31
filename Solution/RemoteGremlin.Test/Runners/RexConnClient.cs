@@ -21,7 +21,7 @@ namespace RexConnectClient.Test.Runners {
 		protected override void RunInner(bool pRecordResult=true) {
 			var sw0 = Stopwatch.StartNew();
 			var ctx = new RexConnContext(RexConnRequest, TimingUtil.Host, (vUseHttp ? 8182 : 8185));
-			ctx.UseHttp = vUseHttp;
+			ctx.SetHttpMode(vUseHttp, TimingUtil.GraphName);
 			ctx.Logger = (level, category, text, ex) => {};
 			var da = new RexConnDataAccess(ctx);
 			sw0.Stop();

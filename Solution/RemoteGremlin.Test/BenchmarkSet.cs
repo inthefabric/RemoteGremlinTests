@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RexConnectClient.Test {
 
@@ -33,11 +34,14 @@ namespace RexConnectClient.Test {
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
 		public void Print() {
+			double runTime = Benchmarks.Sum(b => b.RunTime);
+
 			Console.WriteLine();
 			Console.WriteLine("The following **"+Name+"** timing tests...");
 			Console.WriteLine("- Executed in [Environment A v1.1]"+
 				"(https://github.com/inthefabric/RemoteGremlinTests/wiki/Testing-Environments)");
 			Console.WriteLine("- Completed on "+DateTime.Now.ToString("R"));
+			Console.WriteLine("- Executed in "+TimingUtil.MillisToSecString(runTime));
 			Console.WriteLine();
 
 			foreach ( Benchmark b in Benchmarks ) {

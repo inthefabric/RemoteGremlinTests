@@ -13,7 +13,9 @@ namespace RexConnectClient.Test.Fixtures {
 
 	/*================================================================================================*/
 	[TestFixture]
-	public class Session {
+	public class SessionScenarios {
+
+		private int vSize;
 
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,33 +25,54 @@ namespace RexConnectClient.Test.Fixtures {
 		public void RunBenchmarks(bool pParallel) {
 			const int warm = 5;
 			const int rounds = 10;
-			const int roundSize = 100;
+			const int roundSize = 40;
+			const string name = "RunSession";
 
-			var set = new BenchmarkSet("Session Scenario ("+(pParallel ? "Parallel" : "Serial")+")");
+			var set = new BenchmarkSet("Session Scenarios ("+(pParallel ? "Parallel" : "Serial")+")");
+
+			vSize = 1;
+			var b = new Benchmark(pParallel);
+			b.OverrideRunners(BuildRunners());
+			b.Prepare(name+vSize, "see code");
+			b.Run(warm, rounds, roundSize);
+			set.Add(b);
+
+			vSize = 10;
+			b = new Benchmark(pParallel);
+			b.OverrideRunners(BuildRunners());
+			b.Prepare(name+vSize, "see code");
+			b.Run(warm, rounds, roundSize);
+			set.Add(b);
+
+			vSize = 100;
+			b = new Benchmark(pParallel);
+			b.OverrideRunners(BuildRunners());
+			b.Prepare(name+vSize, "see code");
+			b.Run(warm, rounds, roundSize);
+			set.Add(b);
 			
-			var runners = new IRunner[] {
+			set.Print();
+		}
+
+		/*--------------------------------------------------------------------------------------------*/
+		private IRunner[] BuildRunners() {
+			var runs = new IRunner[] {
 				new Runners.RexProClient(),
 				new RexConnClientTcp(),
 				new RexConnClientPost()
 			};
 
-			runners[0].CustomRunner = RunRexPro;
-			runners[1].CustomRunner = RunRexConnClientTcp;
-			runners[2].CustomRunner = RunRexConnClientPost;
+			runs[0].CustomRunner = RunRexPro;
+			runs[1].CustomRunner = RunRexConnClientTcp;
+			runs[2].CustomRunner = RunRexConnClientPost;
 
-			var b = new Benchmark(pParallel);
-			b.OverrideRunners(runners);
-			b.Prepare("RunSession", "test");
-			set.Add(b);
-
-			set.RunAll(warm, rounds, roundSize);
-			set.Print();
+			return runs;
 		}
 
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
-		public void RunRexPro(IRunner pRunner, bool pRecordResult) {
+		private void RunRexPro(IRunner pRunner, bool pRecordResult) {
 			var sw0 = Stopwatch.StartNew();
 			var rexPro = new RexProClient(TimingUtil.Host, 8184);
 			sw0.Stop();
@@ -83,19 +106,17 @@ namespace RexConnectClient.Test.Fixtures {
 			sw5.Stop();
 
 			var sw6 = Stopwatch.StartNew();
-			string resultA = rexPro.Query<string>("x='A';", null, sess);
-			string resultB = rexPro.Query<string>("x='B';", null, sess);
-			string resultC = rexPro.Query<string>("x='C';", null, sess);
-			string resultD = rexPro.Query<string>("x='D';", null, sess);
-			string resultE = rexPro.Query<string>("x='E';", null, sess);
-			string resultF = rexPro.Query<string>("x='F';", null, sess);
+			var sizeResults = new string[vSize];
+
+			for ( int i = 0 ; i < vSize ; ++i ) {
+				sizeResults[i] = rexPro.Query<string>("x='A"+i+"';", null, sess);
+			}
+
 			sw6.Stop();
-			Assert.AreEqual("A", resultA);
-			Assert.AreEqual("B", resultB);
-			Assert.AreEqual("C", resultC);
-			Assert.AreEqual("D", resultD);
-			Assert.AreEqual("E", resultE);
-			Assert.AreEqual("F", resultF);
+
+			for ( int i = 0 ; i < vSize ; ++i ) {
+				Assert.AreEqual("A"+i, sizeResults[i]);
+			}
 
 			var sw7 = Stopwatch.StartNew();
 			rexPro.KillSession(sess);
@@ -105,9 +126,8 @@ namespace RexConnectClient.Test.Fixtures {
 				return;
 			}
 
-			ResultSet res = pRunner.Results;
-
-			lock ( res ) {
+			lock ( pRunner ) {
+				ResultSet res = pRunner.Results;
 				res.AddExecution("");
 				res.AttachTime("Init", sw0);
 				res.AttachTime("Start", sw1);
@@ -115,23 +135,23 @@ namespace RexConnectClient.Test.Fixtures {
 				res.AttachTime("Worked", sw3);
 				res.AttachTime("Null", sw4);
 				res.AttachTime("Skip", sw5);
-				res.AttachTime("Six", sw6);
+				res.AttachTime("Size", sw6);
 				res.AttachTime("Kill", sw7);
 			}
 		}
 
 		/*--------------------------------------------------------------------------------------------*/
-		public static void RunRexConnClientPost(IRunner pRunner, bool pRecordResult) {
+		private void RunRexConnClientPost(IRunner pRunner, bool pRecordResult) {
 			RunRexConnClientInner(pRunner, pRecordResult, true);
 		}
 
 		/*--------------------------------------------------------------------------------------------*/
-		public static void RunRexConnClientTcp(IRunner pRunner, bool pRecordResult) {
+		private void RunRexConnClientTcp(IRunner pRunner, bool pRecordResult) {
 			RunRexConnClientInner(pRunner, pRecordResult, false);
 		}
 
 		/*--------------------------------------------------------------------------------------------*/
-		private static void RunRexConnClientInner(IRunner pRunner, bool pRecordResult, bool pUseHttp) {
+		private void RunRexConnClientInner(IRunner pRunner, bool pRecordResult, bool pUseHttp) {
 			var sw0 = Stopwatch.StartNew();
 			var r = new Request("123");
 
@@ -149,18 +169,15 @@ namespace RexConnectClient.Test.Fixtures {
 			cmd = r.AddQuery("throw new Exception();");
 			cmd.AddConditionalCommandId("b");
 
-			r.AddQuery("x='A';");
-			r.AddQuery("x='B';");
-			r.AddQuery("x='C';");
-			r.AddQuery("x='D';");
-			r.AddQuery("x='E';");
-			r.AddQuery("x='F';");
+			for ( int i = 0 ; i < vSize ; ++i ) {
+				r.AddQuery("x='A"+i+"';");
+			}
 
 			r.AddSessionAction(RexConn.SessionAction.Close);
 
 			var ctx = new RexConnContext(r, TimingUtil.Host, (pUseHttp ? 8182 : 8185));
-			ctx.UseHttp = pUseHttp;
-			ctx.Logger = (level, category, text, ex) => { };
+			ctx.SetHttpMode(pUseHttp, TimingUtil.GraphName);
+			ctx.Logger = (level, category, text, ex) => {};
 
 			var da = new RexConnDataAccess(ctx);
 			sw0.Stop();
@@ -175,27 +192,24 @@ namespace RexConnectClient.Test.Fixtures {
 
 			IList<ResponseCmd> cmdList = res.Response.CmdList;
 			IList<ITextResultList> tr = res.GetTextResults();
-			Assert.AreEqual(12, cmdList.Count);
+			Assert.AreEqual(6+vSize, cmdList.Count);
 			Assert.AreEqual("hello", tr[1].ToString(0));
 			Assert.AreEqual("worked", tr[2].ToString(0));
 			Assert.AreEqual(0, tr[3].Values.Count);
 			Assert.AreEqual(0, cmdList[3].Results.Count);
 			Assert.Null(tr[4]);
 			Assert.Null(cmdList[4].Results);
-			Assert.AreEqual("A", tr[5].ToString(0));
-			Assert.AreEqual("B", tr[6].ToString(0));
-			Assert.AreEqual("C", tr[7].ToString(0));
-			Assert.AreEqual("D", tr[8].ToString(0));
-			Assert.AreEqual("E", tr[9].ToString(0));
-			Assert.AreEqual("F", tr[10].ToString(0));
+
+			for ( int i = 0 ; i < vSize ; ++i ) {
+				Assert.AreEqual("A"+i, tr[5+i].ToString(0));
+			}
 
 			if ( !pRecordResult ) {
 				return;
 			}
 
-			ResultSet rs = pRunner.Results;
-
-			lock ( res ) {
+			lock ( pRunner ) {
+				ResultSet rs = pRunner.Results;
 				rs.AddExecution(json);
 				rs.AttachTime("Init", sw0);
 				rs.AttachTime("Exec", sw1);

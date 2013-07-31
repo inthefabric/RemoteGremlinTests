@@ -19,6 +19,8 @@ namespace RexConnectClient.Test {
 		public int Rounds { get; private set; }
 		public int RoundSize { get; private set; }
 
+		public double RunTime { get; private set; }
+
 		private readonly ParallelOptions vParOpt;
 
 
@@ -27,6 +29,7 @@ namespace RexConnectClient.Test {
 		public Benchmark(bool pIsParallel) {
 			IsParallel = pIsParallel;
 			TestName = "Unknown";
+			RunTime = 0;
 
 			Runners = new IRunner[] {
 				new GremlinExtGet(),
@@ -100,6 +103,7 @@ namespace RexConnectClient.Test {
 			}
 
 			Console.WriteLine();
+			RunTime += sw.Elapsed.TotalMilliseconds;
 		}
 
 
@@ -109,6 +113,7 @@ namespace RexConnectClient.Test {
 			Console.WriteLine("### "+TestName);
 			Console.WriteLine("- **Script:** `"+Script+"`");
 			Console.WriteLine("- **Plan:** Warms "+Warm+", Rounds "+Rounds+", RoundSize "+RoundSize);
+			Console.WriteLine("- **Execution Time:** "+TimingUtil.MillisToSecString(RunTime));
 			Console.WriteLine();
 			Console.WriteLine("|Method|Avg Total|Times|");
 			Console.WriteLine("|:--|--:|:--|");
