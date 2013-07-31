@@ -36,6 +36,7 @@
     </Compile>
     <Compile Include="Benchmark.cs" />
     <Compile Include="BenchmarkSet.cs" />
+    <Compile Include="Fixtures\GremlinCompile.cs" />
     <Compile Include="Fixtures\SessionScenarios.cs" />
     <Compile Include="Fixtures\SimpleQuery.cs" />
     <Compile Include="Results\ResultSetHistogram.cs" />

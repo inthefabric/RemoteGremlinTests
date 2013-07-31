@@ -12,7 +12,10 @@ namespace RexConnectClient.Test.Runners {
 		public string Script { get; private set; }
 		public Request RexConnRequest { get; private set; }
 		public ResultSet Results { get; private set; }
+
+		public Action<IRunner, bool> PreRun { get; set; }
 		public Action<IRunner, bool> CustomRunner { get; set; }
+		public Action<IRunner, bool> PostRun { get; set; }
 
 		protected bool vUseRexConnReq;
 
@@ -41,12 +44,20 @@ namespace RexConnectClient.Test.Runners {
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
 		public void Run(bool pRecordResult=true) {
+			if ( PreRun != null ) {
+				PreRun(this, pRecordResult);
+			}
+
 			if ( CustomRunner != null ) {
 				CustomRunner(this, pRecordResult);
 				return;
 			}
 
 			RunInner(pRecordResult);
+
+			if ( PostRun != null ) {
+				PostRun(this, pRecordResult);
+			}
 		}
 
 		/*--------------------------------------------------------------------------------------------*/

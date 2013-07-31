@@ -11,7 +11,10 @@ namespace RexConnectClient.Test.Runners {
 		string Script { get; }
 		Request RexConnRequest { get; }
 		ResultSet Results { get; }
+
+		Action<IRunner, bool> PreRun { get; set; }
 		Action<IRunner, bool> CustomRunner { get; set; }
+		Action<IRunner, bool> PostRun { get; set; }
 
 
 		////////////////////////////////////////////////////////////////////////////////////////////////

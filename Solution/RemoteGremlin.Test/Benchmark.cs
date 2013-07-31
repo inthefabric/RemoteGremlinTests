@@ -102,8 +102,9 @@ namespace RexConnectClient.Test {
 				}
 			}
 
-			Console.WriteLine();
 			RunTime += sw.Elapsed.TotalMilliseconds;
+			Console.WriteLine("// Completed "+RunTime+"ms");
+			Console.WriteLine();
 		}
 
 
