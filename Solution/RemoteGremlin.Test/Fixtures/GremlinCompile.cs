@@ -24,7 +24,7 @@ namespace RexConnectClient.Test.Fixtures {
 			const int roundSize = 10;
 			const int totalScripts = warm+rounds*roundSize;
 
-			var set = new BenchmarkSet("Session Scenarios ("+(pParallel ? "Parallel" : "Serial")+")");
+			var set = new BenchmarkSet("Gremlin Compile ("+(pParallel ? "Parallel" : "Serial")+")");
 
 			////
 			
