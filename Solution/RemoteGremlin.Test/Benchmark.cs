@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using RexConnectClient.Core.Transfer;
 using RexConnectClient.Test.Runners;
@@ -150,13 +152,14 @@ namespace RexConnectClient.Test {
 			}
 			
 			Console.WriteLine();
+		}
 
-			/*Console.WriteLine();
-			Console.WriteLine("### Details");
-			Console.WriteLine();
 
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		/*--------------------------------------------------------------------------------------------*/
+		public void PrintDetails() {
 			foreach ( IRunner run in Runners ) {
-				Console.WriteLine("#### "+run.Method);
+				Console.WriteLine("#### Details: "+run.Method);
 				Console.WriteLine();
 				Console.WriteLine("|Section|Min|Avg|Max|");
 				Console.WriteLine("|:--|--:|--:|--:|");
@@ -166,9 +169,9 @@ namespace RexConnectClient.Test {
 
 					Console.WriteLine(
 						"|"+key+"|"+
-						MillisToString(times.Min())+"|"+
-						MillisToString(times.Average())+"|"+
-						MillisToString(times.Max())+"|"
+						TimingUtil.MillisToString(times.Min())+"|"+
+						TimingUtil.MillisToString(times.Average())+"|"+
+						TimingUtil.MillisToString(times.Max())+"|"
 					);
 				}
 
@@ -176,13 +179,13 @@ namespace RexConnectClient.Test {
 
 				Console.WriteLine(
 					"|**Total**|"+
-					"**"+MillisToString(sums.Min())+"**|"+
-					"**"+MillisToString(sums.Average())+"**|"+
-					"**"+MillisToString(sums.Max())+"**|"
+					"**"+TimingUtil.MillisToString(sums.Min())+"**|"+
+					"**"+TimingUtil.MillisToString(sums.Average())+"**|"+
+					"**"+TimingUtil.MillisToString(sums.Max())+"**|"
 				);
 
 				Console.WriteLine();
-			}*/
+			}
 
 			/*Console.WriteLine();
 

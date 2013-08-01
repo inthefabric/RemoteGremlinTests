@@ -52,6 +52,11 @@ namespace RexConnectClient.Test.Results {
 			AttachTime(pKey, pWatch.Elapsed.TotalMilliseconds);
 		}
 
+		/*--------------------------------------------------------------------------------------------*/
+		public void AttachTime(string pKey, TimeSpan pSpan) {
+			AttachTime(pKey, pSpan.TotalMilliseconds);
+		}
+
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		/*--------------------------------------------------------------------------------------------*/
