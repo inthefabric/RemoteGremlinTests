@@ -8,3 +8,6 @@ This purpose of this project is to measure the execution times of various scenar
 #### Fabric
 
 These tests were built to support/inform the decisions made in the [Fabric](https://github.com/inthefabric/Fabric) project.
+
+
+[![githalytics.com alpha](https://cruel-carlota.gopagoda.com/10809bb9622e97be74400aa42e762242 "githalytics.com")](http://githalytics.com/inthefabric/RemoteGremlinTests)
